@@ -3,18 +3,21 @@ import styled from "styled-components";
 import FrontDescription from "../components/layouts/FrontDescription";
 import CustomSelect from "../components/elements/CustomSelect";
 import CustomButton from "@/components/elements/CustomButton";
+import { useWallet } from "@/libs/wallet/useWallet";
 
 export default function Home() {
-  const [isConnected, setIsConnected] = React.useState(false);
+  const { address, error, handleConnect, isMetaMaskConnected } = useWallet();
 
   return (
     <>
       <main>
         <Container>
           <FrontDescription />
-          {isConnected ? (
+          {address ? <p>アドレス: {address}</p> : null}
+          {error ? <p>エラ-: {error}</p> : null}
+          {isMetaMaskConnected ? (
             <SelectArea>
-              <SubTitle>** 接続しました **</SubTitle>
+              <SubTitle>** 接続を確立しました **</SubTitle>
               <Text>発行したいNFTの種類を選択してください。</Text>
               <CustomSelect
                 options={[
@@ -29,13 +32,7 @@ export default function Home() {
               <CustomButton title="NFT発行フォームを表示する" />
             </SelectArea>
           ) : (
-            <Button
-              onClick={() => {
-                setIsConnected(true);
-              }}
-            >
-              wallet connect
-            </Button>
+            <Button onClick={handleConnect}>ウォレットに接続する</Button>
           )}
         </Container>
       </main>
